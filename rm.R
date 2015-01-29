@@ -11,14 +11,9 @@ library(randomForest)
 
 library(RCurl)
 
-#### NYC data ####
-# Import data from Socrata
-# Using their api
-# nyc <- read.csv(url("http://data.cityofnewyork.us/resource/
-#                     erm2-nwe9.csv?$limit=%2020000&descriptor=Rat%20Sighting"))
-# # Write the dataset so I don't have to keep importing from Socrata
-# dB <- dBRaw
-# write.csv(dBRaw, file = "./data/NYC.csv")
+today <- Sys.Date()
+lastWeek <- today - 7
+
 
 # Plain Text:
 # https://data.cityofnewyork.us/resource/erm2-nwe9.json?$where=descriptor='Rat Sighting'AND created_date > '2015-01-20'
@@ -27,3 +22,12 @@ library(RCurl)
 #https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%272015-01-20%27
 
 nyc <- read.csv(url("http://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%272015-01-20%27"))
+d <- nyc
+
+# Dot map centered on Boston
+map.center <- geocode("NYC, NY")
+SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
+SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) + 
+  ggtitle(paste("1 Week of Rat Calls as of ",today,sep=""))
+
+ggsave(paste("../ratmaps/images/posts/NYCMap",today,".png",sep=""), dpi=200, width=4, height=4)
