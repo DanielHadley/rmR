@@ -1,17 +1,14 @@
 setwd("/Users/dphnrome/Documents/Git/rmR/")
 setwd("C:/Users/dhadley/Documents/GitHub/rmR")
 
-library(lubridate)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
 library(ggmap)
-library(randomForest)
-library(RCurl)
 
 today <- Sys.Date()
 lastWeek <- today - 7
 
+todayText <- format(today, "%b %d")
+lastWeekText <- format(lastWeek, "%b %d")
+Year <- format(today, "%Y")
 
 ## Plain Text:
 # https://data.cityofnewyork.us/resource/erm2-nwe9.json?$where=descriptor='Rat Sighting'AND created_date > '2015-01-20'
@@ -23,11 +20,10 @@ api <- paste("http://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descrip
 nyc <- read.csv(url(api))
 d <- nyc
 
-# Dot map centered on Boston
-map.center <- geocode("NYC, NY")
-SHmap <- ggmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
+# Dot map 
+map.center <- geocode("New York City, NY")
+SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) + 
-  
-  ggtitle(paste("1 Week of Rat Calls as of ",today,sep=""))
+  ggtitle(paste("Rat Calls: ", lastWeekText, " to ", todayText, ", ", Year, sep=""))
 
 ggsave(paste("../ratmaps/images/posts/NYCMap",today,".png",sep=""), dpi=200, width=4, height=4)
