@@ -4,7 +4,7 @@
 # Automates the creation and posting of new rat maps
 
 # run the script that creates the newest map
-Rscript NYCWeekly.R
+Rscript /Users/dphnrome/Documents/Git/rmR/NYCWeekly.R
 
 
 ## Takes last week's post, copies it, and replaces map
@@ -15,7 +15,7 @@ UStoday=`date +%m-%d-%Y` # US date as variable
 USlastWeek=$(date -j -v-7d +"%m-%d-%Y")
 
 # Pull the latest version in case changes were made
-cd ../ratmaps/
+cd /Users/dphnrome/Documents/Git/ratmaps/
 git pull
 
 cd ./_posts/
@@ -35,3 +35,5 @@ cd ..
 git add .
 git commit -a -m "NYC Weekly"
 git push
+# git push https://username:password@github.com/username/repository.git master
+
