@@ -14,7 +14,8 @@ lastWeek=$(date -j -v-7d +"%Y-%m-%d")
 UStoday=`date +%m-%d-%Y` # US date as variable
 USlastWeek=$(date -j -v-7d +"%m-%d-%Y")
 
-# Pull the latest version in case changes were made
+### Pull the latest version in case changes were made
+
 cd /Users/dphnrome/Documents/Git/ratmaps/
 git pull
 
@@ -35,5 +36,7 @@ cd ..
 git add .
 git commit -a -m "NYC Weekly"
 git push
-# git push https://username:password@github.com/username/repository.git master
+
+
+
 
