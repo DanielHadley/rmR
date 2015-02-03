@@ -1,5 +1,5 @@
 setwd("/Users/dphnrome/Documents/Git/rmR/")
-setwd("C:/Users/dhadley/Documents/GitHub/rmR")
+# setwd("C:/Users/dhadley/Documents/GitHub/rmR")
 
 library(ggmap)
 
@@ -24,6 +24,6 @@ d <- nyc
 map.center <- geocode("New York City, NY")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) + 
-  ggtitle(paste("Rat Calls: ", lastWeekText, " to ", todayText, ", ", Year, sep=""))
+  ggtitle(paste("Rat Calls: ", lastWeekText, " to ", todayText, ", ", Year, sep="")) 
 
-ggsave(paste("../ratmaps/images/posts/NYCMap",today,".png",sep=""), dpi=200, width=4, height=4)
+ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/NYC_Rat_Map_",today,".png",sep=""), dpi=200, width=4, height=4)
