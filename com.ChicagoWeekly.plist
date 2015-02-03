@@ -2,11 +2,11 @@
 <plist version="1.0">
 <dict>
    <key>Label</key>
-   <string>com.NYCWeekly</string>
+   <string>com.ChicagoWeekly</string>
    <key>ProgramArguments</key>
    <array>
       <string>/bin/bash</string>
-      <string>/Users/dphnrome/Documents/Git/rmR/NYCWeekly.sh</string>
+      <string>/Users/dphnrome/Documents/Git/rmR/ChicagoWeekly.sh</string>
    </array>
    <key>LowPriorityIO</key>
    <true/>
@@ -19,7 +19,7 @@
       <key>Minute</key>
       <integer>15</integer>
       <key>Weekday</key>
-      <integer>1</integer>
+      <integer>3</integer>
    </dict>
 </dict>
 </plist>
