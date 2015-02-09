@@ -35,7 +35,7 @@ sink(paste("/Users/dphnrome/Documents/Git/ratmaps/_posts/test-", today,".md",sep
 
 cat("---\n")
 cat("layout: post\n")
-cat("title: NYC Weekly", today, "\n") 
+cat(sprintf('title: NYC Weekly %s\n', today))
 cat("tags: NYC weekly\n")
 cat("---\n")
 
