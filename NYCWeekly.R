@@ -27,3 +27,23 @@ SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, b
   ggtitle(paste("Rat Calls: ", lastWeekText, " to ", todayText, ", ", Year, sep="")) 
 
 ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/NYC_Rat_Map_",today,".png",sep=""), dpi=200, width=4, height=4)
+
+
+
+# Start writing to an output file
+sink(paste("/Users/dphnrome/Documents/Git/ratmaps/_posts/test-", today,".md",sep=""))
+
+cat("---\n")
+cat("layout: post\n")
+cat("title: NYC Weekly", today, "\n") 
+cat("tags: NYC weekly\n")
+cat("---\n")
+
+
+
+
+cat("![_config.yml](http://googledrive.com/host/0BxOPuM_gK7bqUW85bjZUd1UwTGs/posts/NYC_Rat_Map_",today,".png\n")
+
+# Stop writing to the file
+sink()
+
