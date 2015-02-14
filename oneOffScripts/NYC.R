@@ -11,7 +11,7 @@ library(ggmap)
 c <- read.csv("../data/NYC_rats.csv")
 
 # Mainly fixing dates
-d <- d %>%
+d <- c %>%
   tbl_df()  %>% # Convert to tbl class - easier to examine than dfs
   mutate(dateTime = mdy_hms(Created.Date, tz='EST')) %>%
   arrange(dateTime) %>%
