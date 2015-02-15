@@ -6,10 +6,12 @@ library(dplyr)
 library(lubridate)
 
 today <- Sys.Date()
+yesterday <- today - 1
 lastWeek <- today - 7
 tenDaysAgo <- today - 10
 
 todayText <- format(today, "%B %d")
+yesterdayText <- format(yesterday, "%B %d")
 lastWeekText <- format(lastWeek, "%B %d")
 thisYear <- format(today, "%Y")
 todayUSA <- format(today, '%m-%d-%Y')
@@ -48,7 +50,7 @@ map.center <- geocode("Chicago, IL")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) 
 
-ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/Chicago_Rat_Map_",today,".png",sep=""), dpi=200, width=4, height=4)
+ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/Chicago_Rat_Map_",yesterday,".png",sep=""), dpi=200, width=4, height=4)
 
 
 ### Now for comparisons to add to the text below
@@ -86,9 +88,9 @@ cat("---\n")
 
 cat("\n")
 
-cat(sprintf("Between %s and %s, there were %s calls to Chicago's 311 line about rats. The average number of weekly calls for this time of year is %s.\n", lastWeekText, todayText, totalCalls, averageForThisTime)) 
+cat(sprintf("Between %s and %s, there were %s calls to Chicago's 311 line about rats. The average number of weekly calls for this time of year is %s.\n", lastWeekText, yesterdayText, totalCalls, averageForThisTime)) 
 
-cat(sprintf("![_config.yml](http://googledrive.com/host/0BxOPuM_gK7bqUW85bjZUd1UwTGs/posts/Chicago_Rat_Map_%s.png)\n", today))
+cat(sprintf("![_config.yml](http://googledrive.com/host/0BxOPuM_gK7bqUW85bjZUd1UwTGs/posts/Chicago_Rat_Map_%s.png)\n", yesterday))
 
 cat("\n")
 cat("Each red dot represents one call about a rat seen in that location. The dots are transparent, so multiple calls from one location will be seen as a solid dot. The usual caveats apply: more calls do not necessarily mean that there are more rats in that location than other parts of the city. A cluster of dots could indicate that one resident is unusually vocal about rodents in his or her neighborhood. Also, more densely populated neighborhoods tend to make more calls to 311.")
