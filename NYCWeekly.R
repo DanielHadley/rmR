@@ -2,24 +2,35 @@ setwd("/Users/dphnrome/Documents/Git/rmR/")
 # setwd("C:/Users/dhadley/Documents/GitHub/rmR")
 
 library(ggmap)
+library(dplyr)
 
 today <- Sys.Date()
 lastWeek <- today - 7
+tenDaysAgo <- today - 10
 
 todayText <- format(today, "%B %d")
 lastWeekText <- format(lastWeek, "%B %d")
 Year <- format(today, "%Y")
 todayUSA <- format(today, '%m-%d-%Y')
 
-## Plain Text:
-# https://data.cityofnewyork.us/resource/erm2-nwe9.json?$where=descriptor='Rat Sighting'AND created_date > '2015-01-20'
-## As URL (read.csv) can't do https, just http
-#https://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%272015-01-20%27
 
-api <- paste("http://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%27", lastWeek, "%27", sep="")
+api <- paste("http://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%27", tenDaysAgo, "%27", sep="")
 
 nyc <- read.csv(url(api))
-d <- nyc
+
+# Bring in all data, combine it, and save new CSV
+# I do this to update data and to provide a comparison
+allData <- read.csv("./data/NYC_rats.csv")
+allData <- rbind(allData, nyc)
+allData <- allData[!duplicated(allData$Unique.Key), ] #remove duplicates
+write.csv(allData, "./data/NYC_rats.csv")
+
+# Winnow down to the last week
+d <- allData %>%
+  mutate(dateTime = mdy_hms(Created.Date, tz='EST')) %>%
+  mutate(date = as.Date(dateTime)) %>%
+  mutate(week = week(date)) %>%
+  filter(date >= lastWeek) # last week
 
 # Dot map 
 map.center <- geocode("New York City, NY")
@@ -31,6 +42,7 @@ ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/NYC_Rat_Map_",today,".p
 
 # total calls
 totalCalls <- nrow(d)
+
 
 #### Start writing to an output file ####
 # This makes the .md blog posts
