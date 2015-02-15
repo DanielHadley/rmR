@@ -3,6 +3,7 @@ setwd("/Users/dphnrome/Documents/Git/rmR/")
 
 library(ggmap)
 library(dplyr)
+library(lubridate)
 
 today <- Sys.Date()
 lastWeek <- today - 7
@@ -10,8 +11,9 @@ tenDaysAgo <- today - 10
 
 todayText <- format(today, "%B %d")
 lastWeekText <- format(lastWeek, "%B %d")
-Year <- format(today, "%Y")
+thisYear <- format(today, "%Y")
 todayUSA <- format(today, '%m-%d-%Y')
+thisWeekNumber <- week(today)
 
 
 api <- paste("http://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%27", tenDaysAgo, "%27", sep="")
@@ -23,14 +25,23 @@ nyc <- read.csv(url(api))
 allData <- read.csv("./data/NYC_rats.csv")
 allData <- rbind(allData, nyc)
 allData <- allData[!duplicated(allData$Unique.Key), ] #remove duplicates
-write.csv(allData, "./data/NYC_rats.csv")
+write.csv(allData, "./data/NYC_rats.csv", row.names=FALSE)
 
 # Winnow down to the last week
 d <- allData %>%
   mutate(dateTime = mdy_hms(Created.Date, tz='EST')) %>%
   mutate(date = as.Date(dateTime)) %>%
-  mutate(week = week(date)) %>%
+  mutate(week = week(date),
+         year = year(date)) %>%
   filter(date >= lastWeek) # last week
+
+# Make the same variables for all data, but keep all
+# we will compare these later
+allData <- allData %>%
+  mutate(dateTime = mdy_hms(Created.Date, tz='EST')) %>%
+  mutate(date = as.Date(dateTime)) %>%
+  mutate(week = week(date),
+         year = year(date))
 
 # Dot map 
 map.center <- geocode("New York City, NY")
@@ -39,9 +50,27 @@ SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, b
 
 ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/NYC_Rat_Map_",today,".png",sep=""), dpi=200, width=4, height=4)
 
+### Now for comparisons to add to the text below
 
 # total calls
 totalCalls <- nrow(d)
+
+# older than 2009 is bad comparison
+# and get rid of this year,
+pastYears <- allData %>%
+  filter(year > 2009 & year < thisYear) 
+
+# comparison average
+averageForThisTime <- pastYears %>%
+  group_by(year, week) %>%
+  summarise(Events = n()) %>%
+  filter(week == thisWeekNumber-2 |
+           week == thisWeekNumber-1 |
+           week == thisWeekNumber |
+           week == thisWeekNumber+1 |
+           week == thisWeekNumber+2)
+
+averageForThisTime <- round(mean(averageForThisTime$Events))
 
 
 #### Start writing to an output file ####
@@ -56,7 +85,7 @@ cat("---\n")
 
 cat("\n")
 
-cat(sprintf("Between %s and %s, there were %s calls to New York City's 311 line about rats.\n", lastWeekText, todayText, totalCalls)) 
+cat(sprintf("Between %s and %s, there were %s calls to New York City's 311 line about rats.The average number of weekly calls for this time of year is %s.\n", lastWeekText, todayText, totalCalls, averageForThisTime)) 
 
 cat(sprintf("![_config.yml](http://googledrive.com/host/0BxOPuM_gK7bqUW85bjZUd1UwTGs/posts/NYC_Rat_Map_%s.png)\n", today))
 
