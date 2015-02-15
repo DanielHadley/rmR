@@ -85,7 +85,7 @@ cat("---\n")
 
 cat("\n")
 
-cat(sprintf("Between %s and %s, there were %s calls to New York City's 311 line about rats.The average number of weekly calls for this time of year is %s.\n", lastWeekText, todayText, totalCalls, averageForThisTime)) 
+cat(sprintf("Between %s and %s, there were %s calls to New York City's 311 line about rats. The average number of weekly calls for this time of year is %s.\n", lastWeekText, todayText, totalCalls, averageForThisTime)) 
 
 cat(sprintf("![_config.yml](http://googledrive.com/host/0BxOPuM_gK7bqUW85bjZUd1UwTGs/posts/NYC_Rat_Map_%s.png)\n", today))
 
