@@ -8,10 +8,12 @@ library(scales)
 library(ggplot2)
 library(ggmap)
 
-c <- read.csv("../data/NYC_rats.csv")
+
+#### NYC ####
+nyc <- read.csv("../data/NYC_rats.csv")
 
 # Mainly fixing dates
-d <- c %>%
+d <- nyc %>%
   tbl_df()  %>% # Convert to tbl class - easier to examine than dfs
   mutate(dateTime = mdy_hms(Created.Date, tz='EST')) %>%
   arrange(dateTime) %>%
@@ -65,9 +67,8 @@ monthly <- d %>%
   group_by(Year.Month) %>%
   filter(Year.Month != "2015-02") %>%
   summarise(Events = n()) %>%
-  mutate(Year.Month = as.Date(paste(Year.Month,1,sep="-"),"%Y-%m-%d")) %>%
+  mutate(Year.Month = as.Date(paste(Year.Month,1,sep="-"),"%Y-%m-%d")) 
   
-
 ggplot(monthly, aes(x=Year.Month, y=Events, group = 1)) + 
   geom_line(colour='red', size = 1) + 
   my.theme + ggtitle("Monthly Rat Calls, NYC") + xlab("Year") +
@@ -75,4 +76,25 @@ ggplot(monthly, aes(x=Year.Month, y=Events, group = 1)) +
   scale_y_continuous(labels = comma) +
   scale_x_date(labels=date_format("%Y"))
   
-ggsave("../plots/RatStats/NYC_rats_monthly.png", dpi=250, width=5, height=3)
+ggsave("../plots/RatStats/NYC_Rats_monthly.png", dpi=250, width=5, height=3)
+
+
+## Borough
+borough <- d %>%
+  filter(year > 2009) %>%
+  group_by(Borough) %>%
+  summarise(Events = n()) %>%
+  filter(Borough != "Unspecified")
+
+ggplot(borough, aes(x=reorder(Borough, Events), y=Events)) + 
+  geom_bar(stat = "identity", colour="white", fill="red") +
+  geom_line(colour='red', size = 1) + 
+  my.theme + ggtitle("Rat Calls By Borough") + xlab("Borough") +
+  ylab("311 Rat Calls") + 
+  scale_y_continuous(labels = comma) 
+
+ggsave("../plots/RatStats/NYC_Rats_by_borough.png", dpi=250, width=3, height=3)
+
+
+
+
