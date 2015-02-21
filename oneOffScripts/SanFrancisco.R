@@ -1,10 +1,7 @@
 setwd("/Users/dphnrome/Documents/Git/rmR/oneOffScripts/")
 # setwd("C:/Users/dhadley/Documents/GitHub/rmR")
 
-library(lubridate)
-library(tidyr)
-library(dplyr)
-library(broom) # augments d with model variables
+
 library(ggplot2)
 library(ggmap)
 
