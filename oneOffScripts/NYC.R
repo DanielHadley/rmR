@@ -1,5 +1,5 @@
 setwd("/Users/dphnrome/Documents/Git/rmR/oneOffScripts/")
-# setwd("C:/Users/dhadley/Documents/GitHub/rmR")
+# setwd("C:/Users/dhadley/Documents/GitHub/rmR/oneOffScripts/")
 
 library(lubridate)
 library(tidyr)
@@ -91,3 +91,20 @@ SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom =
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 1, alpha = .3, bins = 26, color="red",) 
 
 ggsave(paste("../plots/NYC_Rat_Map_Downtown_Manhattan.png",sep=""), dpi=200, width=4, height=4)
+
+
+
+
+# More traditional heat map
+map.center <- geocode("New York City, NY")
+map.center <- c(lon=map.center$lon, lat=map.center$lat)
+nyc.map = get_map(location = map.center, zoom = 11, maptype="roadmap",color = "bw")
+ggmap(nyc.map, extent = "panel", maprange=FALSE) %+% d + aes(x = d$Longitude, y = d$Latitude) +
+  stat_density2d(data = d, aes(x = Longitude, y = Latitude,  fill = ..level.., alpha = ..level..),
+                 size = 0.01, bins = 16, geom = 'polygon') +
+  scale_fill_gradient(low = "green", high = "red") +
+  scale_alpha(range = c(0.00, 0.25), guide = FALSE) +
+  theme(legend.position = "none", axis.title = element_blank(), text = element_blank()) 
+
+# ggsave(paste("./plots/OneOff/",workOrder, "_map_Heat2.png", sep=""), dpi=250, width=6, height=5)
+# I don't think the heat map really adds much - and it's ugly
