@@ -1,5 +1,5 @@
 setwd("/Users/dphnrome/Documents/Git/rmR/oneOffScripts/")
-# setwd("C:/Users/dhadley/Documents/GitHub/rmR")
+setwd("C:/Users/dhadley/Documents/GitHub/rmR/oneOffScripts/")
 
 library(lubridate)
 library(tidyr)
@@ -87,5 +87,66 @@ SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom =
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 1, alpha = .1, bins = 26, color="red",) 
 
 ggsave(paste("../plots/Chicago_Rat_Map_Far_Southeast.png",sep=""), dpi=200, width=4, height=4)
+
+
+
+
+
+
+
+#### Neighborhoods ####
+
+chicagoNeighborhoods <- read.csv("./chicagoNeighborhoods.csv")
+chicagoNeighborhoods$full <- gsub(" ", "_", chicagoNeighborhoods$b)
+
+### Automatic Maps ####
+uncomment to use #
+
+for(i in 1 : 2){
+  map.center <- geocode(paste(chicagoNeighborhoods[i,2], ", Chicago, Il"))
+  SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 15, color='bw')
+  SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 1.5, alpha = .3, bins = 26, color="red",)
+  
+  ggsave(paste("../plots/Chicago_Rat_Map_", chicagoNeighborhoods[i,3],".png",sep=""), dpi=200, width=3, height=3)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### K-means ####
+# This is how we group crimes on a map.
+# It may be more convenient to use reporting areas, but often those bisect a cluster
+
+# NAs throw off clustering
+# http://stackoverflow.com/questions/11254524/omit-rows-containing-specific-column-of-na
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+
+d <-  completeFun(d, "Latitude")
+
+clust <- d %>%
+  ungroup %>% dplyr::select(Latitude, Longitude) %>% kmeans(15)
+
+
+# Add cluster variable back to the data frame 
+c <- augment(clust, d) %>% select(.cluster)
+c$order <- d$order
+
+d <- merge(d, c, by='order')
+
+d <- d  %>% tbl_df() %>% mutate(cluster = .cluster) #the ."var name" throws off some functions
+
+remove(c)
 
 
