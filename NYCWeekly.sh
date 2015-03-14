@@ -5,11 +5,11 @@
 
 ### Pull the latest version in case changes were made
 
-cd /Users/dphnrome/Documents/Git/ratmaps/
+cd /home/pi/Github/ratmaps/
 git pull
 
 # run the script that creates the newest map and .md file
-Rscript /Users/dphnrome/Documents/Git/rmR/NYCWeekly.R
+Rscript /home/pi/Github/rmR/NYCWeekly.R
 
 
 cd ./_posts/
