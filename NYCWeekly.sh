@@ -12,12 +12,7 @@ git pull
 # The xvfb makes a virtual monitor for the pngs 
 xvfb-run --server-args="-screen 0 1024x768x24"  Rscript /home/pi/Github/rmR/NYCWeekly.R
 
-
-cd ./_posts/
-
-
 # Commit all changes to the blog
-cd ..
 git add .
 git commit -a -m "NYC Weekly"
 git push
