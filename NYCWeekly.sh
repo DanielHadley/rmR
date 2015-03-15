@@ -10,7 +10,7 @@ git pull
 
 # run the script that creates the newest map and .md file
 # The xvfb makes a virtual monitor for the pngs 
-xvfb-run --server-args="-screen 0 1024x768x24"  Rscript /home/pi/Github/rmR/NYCWeekly.R
+xvfb-run --server-args="-screen 0 1024x768x24" sudo Rscript /home/pi/Github/rmR/NYCWeekly.R
 
 # Commit all changes to the blog
 git add .
