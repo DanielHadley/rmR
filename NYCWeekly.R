@@ -55,7 +55,7 @@ map.center <- geocode("New York City, NY")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 
 # Now save it using Cairo
-Cairo(file=paste("/home/pi/NYC_Rat_Map_",yesterday,".png",sep=""), 
+Cairo(file=paste("/home/pi/Github/ratmaps/images/posts/NYC_Rat_Map_",yesterday,".png",sep=""), 
       units="in", 
       width=4, 
       height=4, 
