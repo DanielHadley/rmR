@@ -50,14 +50,19 @@ allData <- allData %>%
 # Dot map
 # Saved using Cairo because otherwise transparency doesn't work
 
+# set up the map
 map.center <- geocode("New York City, NY")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 
-Cairo(file=paste("/home/pi/Github/ratmaps/images/posts/NYC_Rat_Map_",yesterday,".png",sep=""), type="png", dpi=200, width=4, height=4) 
+# Now save it using Cairo
+Cairo(file=paste("/home/pi/NYC_Rat_Map_",yesterday,".png",sep=""), 
+      units="in", 
+      width=4, 
+      height=4, 
+      pointsize=12, 
+      res=200) 
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) 
 dev.off()
-
-# ggsave(paste("/home/pi/Github/ratmaps/posts/NYC_Rat_Map_",yesterday,".png",sep=""), dpi=200, width=4, height=4)
 
 ### Now for comparisons to add to the text below
 
