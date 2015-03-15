@@ -9,7 +9,8 @@ cd /home/pi/Github/ratmaps/
 git pull
 
 # run the script that creates the newest map and .md file
-Rscript /home/pi/Github/rmR/NYCWeekly.R
+# The xvfb makes a virtual monitor for the pngs 
+xvfb-run --server-args="-screen 0 1024x768x24"  Rscript /home/pi/Github/rmR/NYCWeekly.R
 
 
 cd ./_posts/

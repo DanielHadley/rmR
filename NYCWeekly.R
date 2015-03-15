@@ -5,6 +5,7 @@ setwd("/home/pi/Github/rmR")
 library(ggmap)
 library(dplyr)
 library(lubridate)
+library(Cairo)
 
 today <- Sys.Date()
 yesterday <- today - 1
@@ -46,12 +47,15 @@ allData <- allData %>%
   mutate(week = week(date),
          year = year(date))
 
-# Dot map 
+# Dot map
+# Saved using Cairo because otherwise transparency doesn't work
+Cairo(file=paste("/home/pi/Github/ratmaps/posts/NYC_Rat_Map_",yesterday,".png",sep=""), dpi=200, width=4, height=4) 
 map.center <- geocode("New York City, NY")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) 
+dev.off()
 
-ggsave(paste("/home/pi/Github/ratmaps/posts/NYC_Rat_Map_",yesterday,".png",sep=""), dpi=200, width=4, height=4)
+# ggsave(paste("/home/pi/Github/ratmaps/posts/NYC_Rat_Map_",yesterday,".png",sep=""), dpi=200, width=4, height=4)
 
 ### Now for comparisons to add to the text below
 
