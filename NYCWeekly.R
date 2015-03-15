@@ -53,7 +53,7 @@ allData <- allData %>%
 map.center <- geocode("New York City, NY")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 
-Cairo(file=paste("/home/pi/Github/ratmaps/posts/NYC_Rat_Map_",yesterday,".png",sep=""), type="png", dpi=200, width=4, height=4) 
+Cairo(file=paste("/home/pi/Github/ratmaps/images/posts/NYC_Rat_Map_",yesterday,".png",sep=""), type="png", dpi=200, width=4, height=4) 
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) 
 dev.off()
 
