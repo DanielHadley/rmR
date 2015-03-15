@@ -1,9 +1,11 @@
-setwd("/Users/dphnrome/Documents/Git/rmR/")
+# setwd("/Users/dphnrome/Documents/Git/rmR/")
 # setwd("C:/Users/dhadley/Documents/GitHub/rmR")
+setwd("/home/pi/Github/rmR")
 
 library(ggmap)
 library(dplyr)
 library(lubridate)
+library(Cairo)
 
 today <- Sys.Date()
 yesterday <- today - 1
@@ -45,13 +47,21 @@ allData <- allData %>%
          year = year(date))
 
 
-# Dot map 
+# Dot map
+# Saved using Cairo because otherwise transparency doesn't work
+# set up the map
 map.center <- geocode("Chicago, IL")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
+
+# Now save it using Cairo
+Cairo(file=paste("/home/pi/Github/ratmaps/images/posts/Chicago_Rat_Map_",yesterday,".png",sep=""), 
+      units="in", 
+      width=4, 
+      height=4, 
+      pointsize=12, 
+      res=200) 
 SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) 
-
-ggsave(paste("/Users/dphnrome/Google Drive/RatMaps/posts/Chicago_Rat_Map_",yesterday,".png",sep=""), dpi=200, width=4, height=4)
-
+dev.off()
 
 ### Now for comparisons to add to the text below
 
@@ -78,7 +88,7 @@ averageForThisTime <- round(mean(averageForThisTime$Events))
 
 #### Start writing to an output file ####
 # This makes the .md blog posts
-sink(paste("/Users/dphnrome/Documents/Git/ratmaps/_posts/", today,"-Chicago-Rats.md",sep=""))
+sink(paste("/home/pi/Github/ratmaps/_posts/", today,"-Chicago-Rats.md",sep=""))
 
 cat("---\n")
 cat("layout: post\n")
@@ -90,7 +100,7 @@ cat("\n")
 
 cat(sprintf("Between %s and %s, there were %s calls to Chicago's 311 line about rats. The average number of weekly calls for this time of year is %s.\n", lastWeekText, yesterdayText, totalCalls, averageForThisTime)) 
 
-cat(sprintf("![_config.yml](http://googledrive.com/host/0BxOPuM_gK7bqUW85bjZUd1UwTGs/posts/Chicago_Rat_Map_%s.png)\n", yesterday))
+cat(sprintf("![Chicago rat calls to 311 weekly map]({{ site.onsite }}/Chicago_Rat_Map_%s.png)\n", yesterday))
 
 cat("\n")
 cat("Each red dot represents one call about a rat seen in that location. The dots are transparent, so multiple calls from one location will be seen as a solid dot. The usual caveats apply: more calls do not necessarily mean that there are more rats in that location than other parts of the city. A cluster of dots could indicate that one resident is unusually vocal about rodents in his or her neighborhood. Also, more densely populated neighborhoods tend to make more calls to 311.")

@@ -5,17 +5,14 @@
 
 ### Pull the latest version in case changes were made
 
-cd /Users/dphnrome/Documents/Git/ratmaps/
+cd /home/pi/Github/ratmaps/
 git pull
 
 # run the script that creates the newest map
-Rscript /Users/dphnrome/Documents/Git/rmR/ChicagoWeekly.R
-
-
-cd ./_posts/
+# The xvfb makes a virtual monitor for the pngs 
+xvfb-run --server-args="-screen 0 1024x768x24" sudo Rscript /home/pi/Github/rmR/ChicagoWeekly.R
 
 # Commit all changes to the blog
-cd ..
 git add .
 git commit -a -m "Chicago Weekly"
 git push

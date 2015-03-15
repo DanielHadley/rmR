@@ -49,7 +49,6 @@ allData <- allData %>%
 
 # Dot map
 # Saved using Cairo because otherwise transparency doesn't work
-
 # set up the map
 map.center <- geocode("New York City, NY")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
