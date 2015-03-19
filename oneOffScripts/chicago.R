@@ -98,17 +98,47 @@ ggsave(paste("../plots/Chicago_Rat_Map_Far_Southeast.png",sep=""), dpi=200, widt
 
 chicagoNeighborhoods <- read.csv("./chicagoNeighborhoods.csv")
 chicagoNeighborhoods$full <- gsub(" ", "_", chicagoNeighborhoods$b)
+chicagoNeighborhoods$quotes <- paste("\"",chicagoNeighborhoods$full,"\"",sep="")
 
-### Automatic Maps ####
-uncomment to use #
+# ### Automatic Maps ####
+# uncomment to use #
+# 
+# for(i in 1 : 76){
+#   map.center <- geocode(paste(chicagoNeighborhoods[i,2], ", Chicago, Il"))
+#   SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 15, color='bw')
+#   SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 1.5, alpha = .3, bins = 26, color="red",)
+#   
+#   ggsave(paste("../plots/Chicago_Rat_Map_", chicagoNeighborhoods[i,3],".png",sep=""), dpi=200, width=3, height=3)
+# }
 
-for(i in 1 : 2){
-  map.center <- geocode(paste(chicagoNeighborhoods[i,2], ", Chicago, Il"))
-  SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 15, color='bw')
-  SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 1.5, alpha = .3, bins = 26, color="red",)
-  
-  ggsave(paste("../plots/Chicago_Rat_Map_", chicagoNeighborhoods[i,3],".png",sep=""), dpi=200, width=3, height=3)
+
+#### Start writing to an output file ####
+# This makes the .md page with neighborhoods
+sink("../../ratmaps/chicago-neighborhoods.md")
+
+cat("---\n")
+cat("layout: page\n")
+cat('title: Chicago Neighborhoods\n')
+cat("permalink: /chicago/neighborhoods\n")
+cat("---\n")
+
+cat("\n")
+
+for(i in 1 : 76){
+  cat(sprintf("+ [%s](#%s)\n", chicagoNeighborhoods[i,2], chicagoNeighborhoods[i,3]))
 }
+
+cat("\n")
+
+for(i in 1 : 76){
+  cat(sprintf("### %s <a id=%s></a>\n", chicagoNeighborhoods[i,2], chicagoNeighborhoods[i,4]))
+  cat(sprintf("![chicago rat calls to 311 map %s]({{ site.cityimages }}/neighborhoods/Chicago_Rat_Map_%s.png)\n", chicagoNeighborhoods[i,2], chicagoNeighborhoods[i,3]))
+}
+
+
+# Stop writing to the file
+sink()
+
 
 
 
