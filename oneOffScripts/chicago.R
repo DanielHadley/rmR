@@ -131,6 +131,7 @@ for(i in 1 : 76){
 cat("\n")
 
 for(i in 1 : 76){
+  cat("\n")
   cat(sprintf("### %s <a id=%s></a>\n", chicagoNeighborhoods[i,2], chicagoNeighborhoods[i,4]))
   cat(sprintf("![chicago rat calls to 311 map %s]({{ site.cityimages }}/neighborhoods/Chicago_Rat_Map_%s.png)\n", chicagoNeighborhoods[i,2], chicagoNeighborhoods[i,3]))
 }
