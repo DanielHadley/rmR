@@ -119,7 +119,7 @@ sink("../../ratmaps/chicago-neighborhoods.md")
 cat("---\n")
 cat("layout: page\n")
 cat('title: Chicago Neighborhoods\n')
-cat("permalink: /chicago/neighborhoods\n")
+cat("permalink: /chicago/neighborhoods/\n")
 cat("---\n")
 
 cat("\n")
