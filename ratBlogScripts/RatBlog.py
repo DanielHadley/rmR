@@ -4,7 +4,7 @@
 import feedparser
 import newspaper
 from newspaper import Article
-
+import time
 
 d = feedparser.parse(
 'https://news.google.com/news/feeds?output=rss&q=rats+rodents')
@@ -16,6 +16,7 @@ link_url = longLink.split('url=', 1)[1]
 # A couple of variables I use below
 news_agency = link_url.split('.', 1)[1]
 news_agency = news_agency.split('/', 1)[0]
+today = (time.strftime("%Y-%m-%d"))
 
 # all prerequisites in Newspaper
 first_article = Article(url = str(link_url), language='en')
@@ -30,9 +31,9 @@ print(first_article.summary)
 blog_title = first_article.title.encode('utf-8')
 blog_summary = first_article.summary.encode('utf-8')
 
-# I define the first_paragraph as the first four sentences
+# I define the first_paragraph as the first six sentences
 first_paragraph = first_article.text.encode('utf-8')
-sentences = 4
+sentences = 6
 seperate_sentences = first_paragraph.split('.')
 first_paragraph = '.'.join(seperate_sentences[:sentences])
 
@@ -40,7 +41,7 @@ first_paragraph = '.'.join(seperate_sentences[:sentences])
 image = first_article.top_image.encode('utf-8')
 
 # Now I write it out for the blog
-f = open('myfile.md','w')
+f = open('/home/pi/Github/ratmaps/_posts/%s-Rat-News.md' % today,'w')
 f.write('---\n')
 f.write('layout: post\n')
 f.write('title: ' + blog_title + '\n' )
