@@ -4,6 +4,8 @@ The text file without an ending is placed in /etc/cron.d/ and set to UTC time (e
 My plan from here:
 
 + Download data each night
++ Daily report
++ Turn weekly maps into monthly or less
 + Get the rest of the cities
 + K-means cluster, see % increase, and do "hottest new hoods" 
 + Replace rat stats
@@ -14,5 +16,4 @@ My plan from here:
 Maybe
 
 + sparklines
-+ Daily report
 + Forecase
