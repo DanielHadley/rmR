@@ -60,7 +60,7 @@ Cairo(file=paste("/home/pi/Github/ratmaps/images/posts/NYC_Rat_Map_",yesterday,"
       height=4, 
       pointsize=12, 
       res=200) 
-SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .7, bins = 26, color="red",) 
+SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .3, bins = 26, color="red",) 
 dev.off()
 
 ### Now for comparisons to add to the text below
