@@ -1,5 +1,5 @@
-# setwd("/Users/dphnrome/Documents/Git/rmR/")
-setwd("C:/Users/dhadley/Documents/GitHub/rmR")
+setwd("/Users/dphnrome/Documents/Git/rmR/oneOffScripts/")
+# setwd("C:/Users/dhadley/Documents/GitHub/rmR")
 # setwd("/home/pi/Github/rmR")
 
 library(dplyr)
@@ -50,7 +50,6 @@ SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom =
 SHmap + geom_point(data=d, aes(x=Longitude, y=Latitude, color=as.character(d$Community.Area)))
 
 
-
 ## See which one grew the most
 
 hotHoods <- d %>%
@@ -62,18 +61,33 @@ hotHoods <- d %>%
 hotHoods$Avg <- rowMeans(hotHoods[,c("PrevPer1", "PrevPer2", "PrevPer3")], na.rm=TRUE)
 hotHoods$PerChng <- ((hotHoods$TrailingYear - hotHoods$Avg)) / hotHoods$Avg
 
+# Before selecting the top & bottom hoods, I drop the bottom quartile of avg total calls
+# The outliers often have the most variance, and are less interesting
+
+hotHoods <- hotHoods %>%
+  mutate(quartile = ntile(Avg, 4)) %>%
+  filter(quartile > 1)
 
 topNeighborhood <- subset(hotHoods, PerChng == max(PerChng))
 bottomNeighborhood <- subset(hotHoods, PerChng == min(PerChng))
 
+# Make a map for the blog post
 
-coldestHoodData <- d %>%
+topNeighborhoodData <- d %>%
+  filter(Community.Area == topNeighborhood$Community.Area)
+
+bottomNeighborhoodData <- d %>%
   filter(Community.Area == bottomNeighborhood$Community.Area)
 
-# Dot map of coldest hood 
-map.center <- geocode("Chicago, IL")
+# Geocode and then map
+lon <- c(mean(topNeighborhoodData$Longitude))
+lat <- c(mean(topNeighborhoodData$Latitude))
+map.center <- data.frame(lon, lat)
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 14, color='bw')
-SHmap + geom_point(data=coldestHoodData, aes(x=Longitude, y=Latitude, color="red"))
+SHmap + geom_point(data=topNeighborhoodData, aes(y=Latitude, x=Longitude), size = 2, alpha = .3, bins = 26, color="red",) 
+
+ggsave("../plots/Chicago_Rat_Map_Top_Neighborhood_2015.png", dpi=200, width=4, height=4)
+
 
 
 
