@@ -3,15 +3,18 @@ The text file without an ending is placed in /etc/cron.d/ and set to UTC time (e
 
 My plan from here:
 
-+ ~~ Download data each night ~~
-+ Daily report
++ ~~Download data each night~~
++ ~~Daily report~~
 + Turn weekly maps into monthly or less
-+ ~~ Get the rest of the cities ~~ 
++ ~~Get the rest of the cities~~ 
 + Top 10 Neighborhoods 
-+ Replace rat stats
++ ~~Replace rat stats~~
 + find a way to archive posts
 + About me - maybe with I fought
 + Top posts
++ Share buttons
++ Start to post places
++ KC
 
 Maybe
 

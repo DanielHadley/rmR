@@ -105,20 +105,21 @@ sink("../ratmaps/daily.md") #"/home/pi/Github
 cat("---\n")
 cat("layout: page\n")
 cat('title: Daily Rat Calls\n')
+cat("permalink: /daily/\n")
 cat("tags: Chicago NYC weekly daily rats\n")
 cat("---\n")
 
 cat("\n")
 
-cat("+[Chicago](#chicago)\n")
-cat("\n")
-cat("+[New York City](#nyc)\n")
-cat("+[Boston](#boston)\n")
+cat("+ [Chicago](#chicago)\n")
+cat("+ [New York City](#nyc)\n")
+cat("+ [Boston](#boston)\n")
 cat("\n")
 cat("****\n")
 cat("\n")
 
-cat("#Chicago <a id=\"chicago\"><a>\n")
+cat("# Chicago <a id=\"chicago\"><a>\n")
+
 cat("### Daily\n")
 cat(sprintf("Yesterday (%s), there were %s calls to Chicago's 311 line about rats.\n", yesterdayText, chiYesterday))
 
