@@ -119,7 +119,7 @@ cat("****\n")
 cat("\n")
 
 cat("# Chicago <a id=\"chicago\"><a>\n")
-
+cat("\n")
 cat("### Daily\n")
 cat("\n")
 cat(sprintf("Yesterday (%s), there were %s calls to Chicago's 311 line about rats.\n", yesterdayText, chiYesterday))
