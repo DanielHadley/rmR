@@ -121,6 +121,7 @@ cat("\n")
 cat("# Chicago <a id=\"chicago\"><a>\n")
 
 cat("### Daily\n")
+cat("\n")
 cat(sprintf("Yesterday (%s), there were %s calls to Chicago's 311 line about rats.\n", yesterdayText, chiYesterday))
 
 cat("![Chicago rat calls to 311 weekly map]({{ site.cityimages }}/daily/Chicago_Rat_Map_Daily.png)\n")

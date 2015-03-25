@@ -1,5 +1,5 @@
 
-5 9 * * 3 pi /home/pi/Github/rmR/ChicagoWeekly.sh
+45 9 * * * pi /home/pi/Github/rmR/DailyMaps.sh
 
 # 1. Entry: Minute when the process will be started [0-60]
 # 2. Entry: Hour when the process will be started [0-23] in UTC, which is 4 hours ahead of EST
@@ -7,4 +7,4 @@
 # 4. Entry: Month of the year when the process will be started [1-12]
 # 5. Entry: Weekday when the process will be started [0-6] [0 is Sunday]
 #
-# So this is 5:05 am on Wednesday
+# So this is 5:45 am every day
