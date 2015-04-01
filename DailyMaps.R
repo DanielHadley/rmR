@@ -212,6 +212,7 @@ cat(sprintf("Between %s and %s, there were %s calls to Chicago's 311 line about 
 
 cat("![Chicago rat calls to 311 weekly map]({{ site.cityimages }}/daily/Chicago_Rat_Map_Weekly.png)\n")
 
+cat("***\n")
 cat("# New York City <a id=\"nyc\"><a>\n")
 cat("\n")
 cat("### Daily\n")
