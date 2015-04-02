@@ -44,10 +44,10 @@ d$period <-
 
 ## Use maps to inspect the neighborhoods ##
 
-# Dot map 
-map.center <- geocode("Chicago, Il")
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 12, color='bw')
-SHmap + geom_point(data=d, aes(x=Longitude, y=Latitude, color=as.character(d$Community.Area)))
+# # Dot map 
+# map.center <- geocode("Chicago, Il")
+# SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 12, color='bw')
+# SHmap + geom_point(data=d, aes(x=Longitude, y=Latitude, color=as.character(d$Community.Area)))
 
 
 ## See which one grew the most
@@ -73,8 +73,10 @@ hotHoods <- hotHoods %>%
 ## Make maps for the blog post
 
 for (i in 1:5) {
+  CA = as.numeric(hotHoods[i,1])
   topNeighborhoodData <- d %>%
-    filter(Community.Area = hotHoods[i,1])
+    filter(Community.Area == CA,
+           period == "TrailingYear")
   
   # Geocode and then map
   lon <- c(mean(topNeighborhoodData$Longitude))
@@ -83,11 +85,8 @@ for (i in 1:5) {
   SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 14, color='bw')
   SHmap + geom_point(data=topNeighborhoodData, aes(y=Latitude, x=Longitude), size = 2, alpha = .3, bins = 26, color="red",) 
   
-  ggsave(paste("../plots/Chicago_Rat_Map_Top_Neighborhood_2015_Number_", i,".png", sep=""), dpi=200, width=4, height=4)
+  ggsave(paste("../ratmaps/images/posts/2015_HotNeighborhoods/Chicago_Rat_Map_Top_Neighborhood_2015_Number_", i,".png", sep=""), dpi=200, width=4, height=4)
    
 }
-
-
-
 
 
