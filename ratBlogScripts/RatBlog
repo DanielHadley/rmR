@@ -1,5 +1,5 @@
 
-5 8 * * 5 pi /home/pi/Github/rmR/ratBlogScripts/RatBlog.sh
+5 12 * * * pi /home/pi/Github/rmR/ratBlogScripts/RatBlog.sh
 
 # 1. Entry: Minute when the process will be started [0-60]
 # 2. Entry: Hour when the process will be started [0-23] in UTC, which is 4 hours ahead of EST
