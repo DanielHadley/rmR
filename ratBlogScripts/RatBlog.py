@@ -24,7 +24,7 @@ first_article.download()
 first_article.parse()
 first_article.nlp()
 # Just a quick test print if I'm watching
-print(first_article.summary)
+# print(first_article.summary)
 
 # I have to turn everything into utf-8 because of encoding issues
 # On the pi
