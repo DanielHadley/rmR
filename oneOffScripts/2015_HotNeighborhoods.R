@@ -44,10 +44,10 @@ d$period <-
 
 ## Use maps to inspect the neighborhoods ##
 
-# Dot map 
-map.center <- geocode("Chicago, Il")
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 12, color='bw')
-SHmap + geom_point(data=d, aes(x=Longitude, y=Latitude, color=as.character(d$Community.Area)))
+# # Dot map 
+# map.center <- geocode("Chicago, Il")
+# SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 12, color='bw')
+# SHmap + geom_point(data=d, aes(x=Longitude, y=Latitude, color=as.character(d$Community.Area)))
 
 
 ## See which one grew the most
@@ -56,38 +56,37 @@ hotHoods <- d %>%
   group_by(period, Community.Area) %>%
   summarise(calls = n()) %>%
   filter(Community.Area != "NA") %>%
+  ungroup() %>%
   spread(period, calls)
 
 hotHoods$Avg <- rowMeans(hotHoods[,c("PrevPer1", "PrevPer2", "PrevPer3")], na.rm=TRUE)
 hotHoods$PerChng <- ((hotHoods$TrailingYear - hotHoods$Avg)) / hotHoods$Avg
 
-# Before selecting the top & bottom hoods, I drop the bottom quartile of avg total calls
+# Before selecting the top & bottom hoods, I drop the bottom 10% of avg total calls
 # The outliers often have the most variance, and are less interesting
 
 hotHoods <- hotHoods %>%
-  mutate(quartile = ntile(Avg, 4)) %>%
-  filter(quartile > 1)
+  mutate(quantile = ntile(Avg, 10)) %>%
+  filter(quantile > 1) %>%
+  arrange(-PerChng)
 
-topNeighborhood <- subset(hotHoods, PerChng == max(PerChng))
-bottomNeighborhood <- subset(hotHoods, PerChng == min(PerChng))
+## Make maps for the blog post
 
-# Make a map for the blog post
-
-topNeighborhoodData <- d %>%
-  filter(Community.Area == topNeighborhood$Community.Area)
-
-bottomNeighborhoodData <- d %>%
-  filter(Community.Area == bottomNeighborhood$Community.Area)
-
-# Geocode and then map
-lon <- c(mean(topNeighborhoodData$Longitude))
-lat <- c(mean(topNeighborhoodData$Latitude))
-map.center <- data.frame(lon, lat)
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 14, color='bw')
-SHmap + geom_point(data=topNeighborhoodData, aes(y=Latitude, x=Longitude), size = 2, alpha = .3, bins = 26, color="red",) 
-
-ggsave("../plots/Chicago_Rat_Map_Top_Neighborhood_2015.png", dpi=200, width=4, height=4)
-
-
+for (i in 1:5) {
+  CA = as.numeric(hotHoods[i,1])
+  topNeighborhoodData <- d %>%
+    filter(Community.Area == CA,
+           period == "TrailingYear")
+  
+  # Geocode and then map
+  lon <- c(mean(topNeighborhoodData$Longitude))
+  lat <- c(mean(topNeighborhoodData$Latitude))
+  map.center <- data.frame(lon, lat)
+  SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 14, color='bw')
+  SHmap + geom_point(data=topNeighborhoodData, aes(y=Latitude, x=Longitude), size = 2, alpha = .3, bins = 26, color="red",) 
+  
+  ggsave(paste("../ratmaps/images/posts/2015_HotNeighborhoods/Chicago_Rat_Map_Top_Neighborhood_2015_Number_", i,".png", sep=""), dpi=200, width=4, height=4)
+   
+}
 
 
