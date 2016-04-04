@@ -36,13 +36,6 @@ d <- allData %>%
 # Num calls
 chiYesterday <- nrow(d)
 
-# Dot map
-# Saved using Cairo because otherwise transparency doesn't work
-# set up the map
-map.center <- geocode("Chicago, IL")
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
-
-
 ## Last week 
 d <- allData %>%
   filter(date >= lastWeek)
@@ -71,7 +64,7 @@ chiAverageForThisTime <- round(mean(averageForThisTime$Events))
 
 # Now make geojson and save it to ratmaps
 dailyMap_chi <- d %>% 
-  select(Latitude, Longitude) %>% 
+  select(Latitude, Longitude, date) %>% 
   rename(latitude = Latitude, longitude = Longitude)
 
 # Convert and upload to our server
@@ -127,10 +120,125 @@ nycAverageForThisTime <- round(mean(averageForThisTime$Events))
 
 # Now make geojson and save it to ratmaps
 dailyMap_nyc <- d %>% 
-  select(Latitude, Longitude) %>% 
+  select(Latitude, Longitude, date) %>% 
+  filter(Latitude != "NA") %>%
   rename(latitude = Latitude, longitude = Longitude)
 
 # Convert and upload to our server
 toGeoJSON(dailyMap_nyc, "daily_nyc", "../ratmaps/geo/")
 
 
+
+
+#### Boston ####
+
+allData <- read.csv("./data/Boston_rats.csv")
+
+# Make some variables 
+allData <- allData %>%
+  mutate(dateTime = mdy_hms(OPEN_DT, tz='EST')) %>%
+  mutate(date = as.Date(dateTime)) %>%
+  mutate(week = week(date),
+         year = year(date))
+
+## Yesterday 
+d <- allData %>%
+  filter(date == yesterday)
+
+# Num calls
+bosYesterday <- nrow(d)
+
+
+## Last week 
+d <- allData %>%
+  filter(date >= lastWeek)
+
+# Num calls
+bosLastWeek <- nrow(d)
+
+
+# older than 2009 is bad comparison
+# and get rid of this year,
+pastYears <- allData %>%
+  filter(year > 2009 & year < thisYear) 
+
+# comparison average
+averageForThisTime <- pastYears %>%
+  group_by(year, week) %>%
+  summarise(Events = n()) %>%
+  filter(week == thisWeekNumber-2 |
+           week == thisWeekNumber-1 |
+           week == thisWeekNumber |
+           week == thisWeekNumber+1 |
+           week == thisWeekNumber+2)
+
+bosAverageForThisTime <- round(mean(averageForThisTime$Events))
+
+
+# Now make geojson and save it to ratmaps
+dailyMap_bos <- d %>% 
+  select(LATITUDE, LONGITUDE, date) %>% 
+  filter(LATITUDE != "NA") %>%
+  rename(latitude = LATITUDE, longitude = LONGITUDE)
+
+# Convert and upload to our server
+toGeoJSON(dailyMap_bos, "daily_boston", "../ratmaps/geo/")
+
+
+
+
+#### SF ####
+
+allData <- read.csv("./data/SanFrancisco_rats.csv")
+
+# Make some variables 
+allData <- allData %>%
+  mutate(dateTime = mdy_hms(Opened, tz='EST')) %>%
+  mutate(date = as.Date(dateTime)) %>%
+  mutate(week = week(date),
+         year = year(date))
+
+## Yesterday 
+d <- allData %>%
+  filter(date == yesterday)
+
+# Num calls
+sfYesterday <- nrow(d)
+
+
+## Last week 
+d <- allData %>%
+  filter(date >= lastWeek)
+
+# Num calls
+sfLastWeek <- nrow(d)
+
+
+# older than 2009 is bad comparison
+# and get rid of this year,
+pastYears <- allData %>%
+  filter(year > 2009 & year < thisYear) 
+
+# comparison average
+averageForThisTime <- pastYears %>%
+  group_by(year, week) %>%
+  summarise(Events = n()) %>%
+  filter(week == thisWeekNumber-2 |
+           week == thisWeekNumber-1 |
+           week == thisWeekNumber |
+           week == thisWeekNumber+1 |
+           week == thisWeekNumber+2)
+
+sfAverageForThisTime <- round(mean(averageForThisTime$Events))
+
+
+# Now make geojson and save it to ratmaps
+dailyMap_sf <- allData %>% 
+  filter(year == 2015) %>%
+  separate(Point, c("y", "x"), ",") %>%
+  mutate(y = gsub("\\(", "", y), x = gsub("\\)", "", x)) %>%
+  mutate(longitude = as.numeric(x), latitude = as.numeric(y)) %>%
+  select(latitude, longitude, date)
+  
+# Convert and upload to our server
+toGeoJSON(dailyMap_sf, "daily_sf", "../ratmaps/geo/")
