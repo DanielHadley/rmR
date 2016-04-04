@@ -2,10 +2,9 @@
 # setwd("C:/Users/dhadley/Documents/GitHub/rmR")
 setwd("/home/pi/Github/rmR")
 
-library(ggmap)
 library(dplyr)
 library(lubridate)
-library(Cairo)
+library(leafletR)
 
 today <- Sys.Date()
 yesterday <- today - 1
@@ -43,16 +42,6 @@ chiYesterday <- nrow(d)
 map.center <- geocode("Chicago, IL")
 SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
 
-# Now save it using Cairo
-Cairo(file="/home/pi/Github/ratmaps/images/pages/daily/Chicago_Rat_Map_Daily.png", 
-      units="in", 
-      width=4, 
-      height=4, 
-      pointsize=12, 
-      res=200) 
-SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .5, bins = 26, color="red",) 
-dev.off()
-
 
 ## Last week 
 d <- allData %>%
@@ -60,22 +49,6 @@ d <- allData %>%
 
 # Num calls
 chiLastWeek <- nrow(d)
-
-# Dot map
-# Saved using Cairo because otherwise transparency doesn't work
-# set up the map
-map.center <- geocode("Chicago, IL")
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
-
-# Now save it using Cairo
-Cairo(file="/home/pi/Github/ratmaps/images/pages/daily/Chicago_Rat_Map_Weekly.png", 
-      units="in", 
-      width=4, 
-      height=4, 
-      pointsize=12, 
-      res=200) 
-SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .5, bins = 26, color="red",) 
-dev.off()
 
 
 # older than 2009 is bad comparison
@@ -94,6 +67,15 @@ averageForThisTime <- pastYears %>%
            week == thisWeekNumber+2)
 
 chiAverageForThisTime <- round(mean(averageForThisTime$Events))
+
+
+# Now make geojson and save it to ratmaps
+dailyMap_chi <- d %>% 
+  select(Latitude, Longitude) %>% 
+  rename(latitude = Latitude, longitude = Longitude)
+
+# Convert and upload to our server
+toGeoJSON(dailyMap_chi, "daily_chicago", "../ratmaps/geo/")
 
 
 
@@ -116,22 +98,6 @@ d <- allData %>%
 # Num calls
 nycYesterday <- nrow(d)
 
-# Dot map
-# Saved using Cairo because otherwise transparency doesn't work
-# set up the map
-map.center <- geocode("New York City, NY")
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
-
-# Now save it using Cairo
-Cairo(file="/home/pi/Github/ratmaps/images/pages/daily/NYC_Rat_Map_Daily.png", 
-      units="in", 
-      width=4, 
-      height=4, 
-      pointsize=12, 
-      res=200) 
-SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .5, bins = 26, color="red",) 
-dev.off()
-
 
 ## Last week 
 d <- allData %>%
@@ -139,22 +105,6 @@ d <- allData %>%
 
 # Num calls
 nycLastWeek <- nrow(d)
-
-# Dot map
-# Saved using Cairo because otherwise transparency doesn't work
-# set up the map
-map.center <- geocode("New York City, NY")
-SHmap <- qmap(c(lon=map.center$lon, lat=map.center$lat), source="google", zoom = 11, color='bw')
-
-# Now save it using Cairo
-Cairo(file="/home/pi/Github/ratmaps/images/pages/daily/NYC_Rat_Map_Weekly.png", 
-      units="in", 
-      width=4, 
-      height=4, 
-      pointsize=12, 
-      res=200) 
-SHmap + geom_point(data=d, aes(y=Latitude, x=Longitude), size = 2, alpha = .5, bins = 26, color="red",) 
-dev.off()
 
 
 # older than 2009 is bad comparison
@@ -175,63 +125,12 @@ averageForThisTime <- pastYears %>%
 nycAverageForThisTime <- round(mean(averageForThisTime$Events))
 
 
+# Now make geojson and save it to ratmaps
+dailyMap_nyc <- d %>% 
+  select(Latitude, Longitude) %>% 
+  rename(latitude = Latitude, longitude = Longitude)
 
-
-#### Start writing to an output file ####
-# This makes the .md page
-sink("../ratmaps/daily.md") #"/home/pi/Github
-
-cat("---\n")
-cat("layout: page\n")
-cat('title: Daily Rat Calls\n')
-cat("permalink: /daily/\n")
-cat("tags: Chicago NYC weekly daily rats\n")
-cat("---\n")
-
-cat("\n")
-
-cat("+ [Chicago](#chicago)\n")
-cat("+ [New York City](#nyc)\n")
-cat("+ [Boston](#boston)\n")
-cat("\n")
-cat("****\n")
-cat("\n")
-
-cat("# Chicago <a id=\"chicago\"><a>\n")
-cat("\n")
-cat("### Daily\n")
-cat("\n")
-cat(sprintf("Yesterday (%s), there were %s calls to Chicago's 311 line about rats.\n", yesterdayText, chiYesterday))
-
-cat("![Chicago rat calls to 311 weekly map]({{ site.cityimages }}/daily/Chicago_Rat_Map_Daily.png)\n")
-
-cat("\n")
-
-cat("### Weekly\n")
-cat(sprintf("Between %s and %s, there were %s calls to Chicago's 311 line about rats. The average number of weekly calls for this time of year is %s.\n", lastWeekText, yesterdayText, chiLastWeek, chiAverageForThisTime)) 
-
-cat("![Chicago rat calls to 311 weekly map]({{ site.cityimages }}/daily/Chicago_Rat_Map_Weekly.png)\n")
-
-cat("***\n")
-cat("# New York City <a id=\"nyc\"><a>\n")
-cat("\n")
-cat("### Daily\n")
-cat("\n")
-cat(sprintf("Yesterday (%s), there were %s calls to New York City's 311 line about rats.\n", yesterdayText, nycYesterday))
-
-cat("![NYC rat calls to 311 weekly map]({{ site.cityimages }}/daily/NYC_Rat_Map_Daily.png)\n")
-
-cat("\n")
-
-cat("### Weekly\n")
-cat(sprintf("Between %s and %s, there were %s calls to New York City's 311 line about rats. The average number of weekly calls for this time of year is %s.\n", lastWeekText, yesterdayText, nycLastWeek, nycAverageForThisTime)) 
-
-cat("![NYC rat calls to 311 weekly map]({{ site.cityimages }}/daily/NYC_Rat_Map_Weekly.png)\n")
-
-cat("\n")
-cat("Each red dot represents one call about a rat seen in that location. The dots are transparent, so multiple calls from one location will be seen as a solid dot. The usual caveats apply: more calls do not necessarily mean that there are more rats in that location than other parts of the city. A cluster of dots could indicate that one resident is unusually vocal about rodents in his or her neighborhood. Also, more densely populated neighborhoods tend to make more calls to 311.")
-
-# Stop writing to the file
-sink()
+# Convert and upload to our server
+toGeoJSON(dailyMap_nyc, "daily_nyc", "../ratmaps/geo/")
 
 
