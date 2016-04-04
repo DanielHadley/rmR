@@ -23,6 +23,7 @@ allData <- allData[!duplicated(allData$Service.Request.Number), ] #remove duplic
 write.csv(allData, "./data/Chicago_rats.csv", row.names=FALSE)
 
 
+
 #### NYC #### 
 
 api <- paste("http://data.cityofnewyork.us/resource/erm2-nwe9.csv?$where=descriptor=%27Rat%20Sighting%27AND%20created_date%20%3E%20%27", lastWeek, "%27", sep="")
@@ -35,6 +36,7 @@ allData <- read.csv("./data/NYC_rats.csv")
 allData <- rbind(allData, nyc)
 allData <- allData[!duplicated(allData$Unique.Key), ] #remove duplicates
 write.csv(allData, "./data/NYC_rats.csv", row.names=FALSE)
+
 
 
 #### Boston #### 
@@ -51,18 +53,34 @@ allData <- allData[!duplicated(allData$CASE_ENQUIRY_ID), ] #remove duplicates
 write.csv(allData, "./data/Boston_rats.csv", row.names=FALSE)
 
 
-#### KC #### 
 
-api <- paste("http://data.kcmo.org/resource/7at3-sxhp.csv?$where=request_type=%27Rat%20Control%20Treatment%27AND%20creation_date%20%3E%20%27", lastWeek, "%27", sep="")
+#### SF #### 
 
-kc <- read.csv(url(api))
+api <- paste("http://data.sfgov.org/resource/vw6y-z8j6.csv?$where=request_details=%27Infestation_Rodent_Insect%27AND%20opened%20%3E%20%27", lastWeek, "%27", sep="")
+
+sf <- read.csv(url(api))
 
 # Bring in all data, combine it, and save new CSV
 # I do this to update data and to provide a comparison
-allData <- read.csv("./data/KansasCity_rats.csv")
-allData <- rbind(allData, kc)
-allData <- allData[!duplicated(allData$CASE.ID), ] #remove duplicates
-write.csv(allData, "./data/KansasCity_rats.csv", row.names=FALSE)
+allData <- read.csv("./data/SanFrancisco_rats.csv")
+allData <- rbind(allData, sf)
+allData <- allData[!duplicated(allData$Unique.Key), ] #remove duplicates
+write.csv(allData, "./data/SanFrancisco_rats.csv", row.names=FALSE)
+
+
+
+# #### KC #### 
+# 
+# api <- paste("http://data.kcmo.org/resource/7at3-sxhp.csv?$where=request_type=%27Rat%20Control%20Treatment%27AND%20creation_date%20%3E%20%27", lastWeek, "%27", sep="")
+# 
+# kc <- read.csv(url(api))
+# 
+# # Bring in all data, combine it, and save new CSV
+# # I do this to update data and to provide a comparison
+# allData <- read.csv("./data/KansasCity_rats.csv")
+# allData <- rbind(allData, kc)
+# allData <- allData[!duplicated(allData$CASE.ID), ] #remove duplicates
+# write.csv(allData, "./data/KansasCity_rats.csv", row.names=FALSE)
 
 
 # #### Baltimore #### Data is messy and isn't updated 
